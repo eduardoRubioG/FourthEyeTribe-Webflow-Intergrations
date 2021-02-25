@@ -89,7 +89,7 @@ THREEx.Terrain.heightMapToPlaneGeometry	= function(heightMap){
 	var width	= heightMap.length
 	var depth	= heightMap[0].length
 	// build geometry
-	var geometry	= new THREEx.Terrain.PlaneGeometry( 1, 1, width-1, depth-1)
+	var geometry	= new THREE.PlaneGeometry( 1, 1, width-1, depth-1)
 	// loop on each vertex of the geometry
 	for(var x = 0; x < width; x++){
 		for(var z = 0; z < depth; z++){
@@ -154,12 +154,12 @@ THREEx.Terrain.planeToHeightMapCoords	= function(heightMap, planeMesh, x, z){
 	position.sub(planeMesh.position)
 
 	// heightMap origin is at its top-left, while planeMesh origin is at its center
-	position.x	+= planeMesh.geometry.width /2 * planeMesh.scale.x
-	position.z	+= planeMesh.geometry.height/2 * planeMesh.scale.y
+	position.x	+= planeMesh.geometry.parameters.width /2 * planeMesh.scale.x
+	position.z	+= planeMesh.geometry.parameters.height/2 * planeMesh.scale.y
 
 	// normalize it from [0,1] for the heightmap
-	position.x	/= planeMesh.geometry.width * planeMesh.scale.x
-	position.z	/= planeMesh.geometry.height* planeMesh.scale.y
+	position.x	/= planeMesh.geometry.parameters.width * planeMesh.scale.x
+	position.z	/= planeMesh.geometry.parameters.height* planeMesh.scale.y
 
 	// get heightMap dimensions
 	var width	= heightMap.length
@@ -273,92 +273,3 @@ THREEx.Terrain.heightToColor	= (function(){
 		return color;		
 	}
 })()
-
-
-//////////////////////////////////////////////////////////////////////////////////
-//		comment								//
-//////////////////////////////////////////////////////////////////////////////////
-
-/**
- * plane geometry with THREE.Face3 from three.js r66
- * 
- * @param {[type]} width          [description]
- * @param {[type]} height         [description]
- * @param {[type]} widthSegments  [description]
- * @param {[type]} heightSegments [description]
- */
-THREEx.Terrain.PlaneGeometry = function ( width, height, widthSegments, heightSegments ) {
-
-	THREE.Geometry.call( this );
-
-	this.width = width;
-	this.height = height;
-
-	this.widthSegments = widthSegments || 1;
-	this.heightSegments = heightSegments || 1;
-
-	var ix, iz;
-	var width_half = width / 2;
-	var height_half = height / 2;
-
-	var gridX = this.widthSegments;
-	var gridZ = this.heightSegments;
-
-	var gridX1 = gridX + 1;
-	var gridZ1 = gridZ + 1;
-
-	var segment_width = this.width / gridX;
-	var segment_height = this.height / gridZ;
-
-	var normal = new THREE.Vector3( 0, 0, 1 );
-
-	for ( iz = 0; iz < gridZ1; iz ++ ) {
-
-		for ( ix = 0; ix < gridX1; ix ++ ) {
-
-			var x = ix * segment_width - width_half;
-			var y = iz * segment_height - height_half;
-
-			this.vertices.push( new THREE.Vector3( x, - y, 0 ) );
-
-		}
-
-	}
-
-	for ( iz = 0; iz < gridZ; iz ++ ) {
-
-		for ( ix = 0; ix < gridX; ix ++ ) {
-
-			var a = ix + gridX1 * iz;
-			var b = ix + gridX1 * ( iz + 1 );
-			var c = ( ix + 1 ) + gridX1 * ( iz + 1 );
-			var d = ( ix + 1 ) + gridX1 * iz;
-
-			var uva = new THREE.Vector2( ix / gridX, 1 - iz / gridZ );
-			var uvb = new THREE.Vector2( ix / gridX, 1 - ( iz + 1 ) / gridZ );
-			var uvc = new THREE.Vector2( ( ix + 1 ) / gridX, 1 - ( iz + 1 ) / gridZ );
-			var uvd = new THREE.Vector2( ( ix + 1 ) / gridX, 1 - iz / gridZ );
-
-			var face = new THREE.Face3( a, b, d );
-			face.normal.copy( normal );
-			face.vertexNormals.push( normal.clone(), normal.clone(), normal.clone() );
-
-			this.faces.push( face );
-			this.faceVertexUvs[ 0 ].push( [ uva, uvb, uvd ] );
-
-			face = new THREE.Face3( b, c, d );
-			face.normal.copy( normal );
-			face.vertexNormals.push( normal.clone(), normal.clone(), normal.clone() );
-
-			this.faces.push( face );
-			this.faceVertexUvs[ 0 ].push( [ uvb.clone(), uvc, uvd.clone() ] );
-
-		}
-
-	}
-
-	this.computeCentroids();
-
-};
-
-THREEx.Terrain.PlaneGeometry.prototype = Object.create( THREE.Geometry.prototype );
