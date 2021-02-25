@@ -6,7 +6,16 @@ import {
   TOUCH,
   Vector2,
   Vector3,
-} from "../../../build/three.module.js";
+} from "../threex.terrain/examples/vendor/three.js/build/three-min";
+// import {
+//   EventDispatcher,
+//   MOUSE,
+//   Quaternion,
+//   Spherical,
+//   TOUCH,
+//   Vector2,
+//   Vector3,
+// } from "../../../build/three.module.js";
 
 // This set of controls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
