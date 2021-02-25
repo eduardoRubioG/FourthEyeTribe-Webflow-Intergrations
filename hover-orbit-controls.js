@@ -6,7 +6,7 @@ import {
   TOUCH,
   Vector2,
   Vector3,
-} from "../threex.terrain/examples/vendor/three.js/build/three-min";
+} from "https://threejs.org/build/three.js";
 // import {
 //   EventDispatcher,
 //   MOUSE,
