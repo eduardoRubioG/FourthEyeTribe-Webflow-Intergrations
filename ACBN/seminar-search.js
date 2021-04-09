@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "<th>Location</th>" +
         "<th>Number of Hours</th>" +
         "<th>Details</th>" +
-        "<th>More Information</th>" +
+        "<th>Specialty</th>" +
         "<th>Additional Details</th>" +
         "</tr>";
       var result_length = result.length;
@@ -234,11 +234,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
           Object.keys(rowData).forEach((key) => {
             if (nameKeys.includes(key)) {
               headerData += `<div class="view-details-wrapper"><div class="view-details__value">${rowData[key]}</div></div>`;
-            } 
-            else if (key === "Photo: URL") {
+            } else if (key === "Photo: URL") {
               imgURL = rowData[key] || "";
-            }
-            else {
+            } else {
               innerDetailsData =
                 innerDetailsData +
                 `<div class="view-details-wrapper"><div class="view-details__header">${key}</div><div class="view-details__value">${rowData[key]}</div></div>`;
@@ -368,6 +366,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
       excel_data[i][excel_keys["more information"]] === undefined
         ? ""
         : excel_data[i][excel_keys["more information"]];
+    if (!moreInfo) {
+      moreInfo =
+        excel_data[i][excel_keys["specialty"]] === undefined
+          ? ""
+          : excel_data[i][excel_keys["specialty"]];
+    }
 
     return (
       "<tr>" +
